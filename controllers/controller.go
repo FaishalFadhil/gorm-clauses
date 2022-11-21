@@ -59,7 +59,7 @@ func UpdateOrder(c *gin.Context) {
 	var db = database.GetDB()
 
 	var order models.Order
-	err := db.First(&order, "Id = ?", c.Param("id")).Error
+	err := db.Preload("Items").First(&order, "Id = ?", c.Param("id")).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
@@ -71,11 +71,10 @@ func UpdateOrder(c *gin.Context) {
 		return
 	}
 	fmt.Println(input)
-	db.Session(&gorm.Session{FullSaveAssociations: true, AllowGlobalUpdate: true}).Model(&order).Updates(input)
-	// db.Model(&order).Updates(&input)
-	// db.Session(&gorm.Session{FullSaveAssociations: true}).Save(&order)
-
-	c.JSON(http.StatusOK, gin.H{"data": input})
+	// db.Session(&gorm.Session{FullSaveAssociations: true}).Model(&order).Updates(&input)
+	db.Model(&order).Updates(&input)
+	db.Session(&gorm.Session{FullSaveAssociations: true}).Save(&order)
+	c.JSON(http.StatusOK, gin.H{"data": order})
 }
 
 func DeleteOrder(c *gin.Context) {
@@ -111,7 +110,7 @@ func GetOneItem(c *gin.Context) {
 
 	var item models.Item
 	// err := db.Table("Car").Where("Id = ?", c.Param("id")).First(&car).Error
-	err := db.First(&item, "ItemId = ?", c.Param("id")).Error
+	err := db.First(&item, "item_id = ?", c.Param("id")).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
@@ -140,7 +139,7 @@ func UpdateItem(c *gin.Context) {
 	var db = database.GetDB()
 
 	var Item models.Item
-	err := db.First(&Item, "ItemId = ?", c.Param("id")).Error
+	err := db.First(&Item, "item_id = ?", c.Param("id")).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
@@ -161,7 +160,7 @@ func DeleteItem(c *gin.Context) {
 	var db = database.GetDB()
 	// Get model if exist
 	var ItemDelete models.Item
-	err := db.First(&ItemDelete, "ItemId = ?", c.Param("id")).Error
+	err := db.First(&ItemDelete, "item_id = ?", c.Param("id")).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
