@@ -1,4 +1,4 @@
-module assignment-api
+module clauses
 
 go 1.18
 

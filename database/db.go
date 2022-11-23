@@ -1,7 +1,7 @@
 package database
 
 import (
-	"assignment-api/models"
+	"clauses/models"
 	"fmt"
 	"log"
 

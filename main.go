@@ -1,8 +1,8 @@
 package main
 
 import (
-	"assignment-api/database"
-	"assignment-api/routers"
+	"clauses/database"
+	"clauses/routers"
 )
 
 func main() {
